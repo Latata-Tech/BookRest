@@ -4,8 +4,7 @@ const cors = require('cors')
 const routerAuthor = require('./routes/author.route')
 const routerBook = require('./routes/book.route')
 const routerAuth = require('./routes/auth.route')
-// const bodyParser = require('body-parser')
-// app.use(bodyParser.json())
+
 app.use(express.json())
 // enable cors
 app.use(cors())

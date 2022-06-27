@@ -1,6 +1,7 @@
 //191111291 - Farhan Ismul Afriza
 const bcrypt = require('bcrypt')
 const sqlite3 = require('sqlite3')
+const {generateToken} = require("../helpers/jwt.helper");
 const db = new sqlite3.Database('data.db')
 
 const register = async (name, email, password) => {
@@ -53,7 +54,10 @@ const authentication = async (email, password) => {
             return {
                 statusCode: 200,
                 status: 'success',
-                message: 'success to authentication'
+                message: 'success to authentication',
+                data: {
+                    token: generateToken(email)
+                }
             }
         }
         return {
