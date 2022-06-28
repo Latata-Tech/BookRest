@@ -25,7 +25,7 @@ const register = async (name, email, password) => {
                 throw new Error(err.message)
             }
         })
-        return ResponseHelper(201, 'success', 'Success ad new user')
+        return ResponseHelper(201, 'success', 'Register success, please sign in to continue')
     } catch (err) {
         return ResponseHelper(500, 'fail', err.message)
     }
@@ -49,7 +49,7 @@ const authentication = async (email, password) => {
         const isUserExist = await new Promise((resolve, reject) => {
             checkEmailExist(email, resolve, reject)
         })
-        if (bcrypt.compareSync(password, isUserExist.password)) {
+        if (isUserExist && bcrypt.compareSync(password, isUserExist.password)) {
             let access_token = generateToken(email)
             db.run("INSERT INTO oauth_access_token(user_id, access_token, valid) VALUES (?,?,?)", [
                 isUserExist.id, access_token, 1
