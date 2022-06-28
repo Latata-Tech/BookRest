@@ -1,4 +1,5 @@
 //191111291 - Farhan Ismul Afriza
+const e = require('express')
 const express = require('express')
 const router = express.Router()
 const { register, authentication } = require('../handlers/auth.handler')

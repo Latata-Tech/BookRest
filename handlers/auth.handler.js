@@ -2,11 +2,17 @@
 const bcrypt = require('bcrypt')
 const sqlite3 = require('sqlite3')
 const {generateToken} = require("../helpers/jwt.helper");
+const { validation } = require('../helpers/validation.helper')
+
 const db = new sqlite3.Database('data.db')
 
 const register = async (name, email, password) => {
     try {
         const salt = bcrypt.genSaltSync(10)
+        let validationError = validation({name, email, password});
+        if(validationError.errors.length > 0){
+            return validationError
+        }
         const isEmailAlreadyUsed = await new Promise((resolve, reject) => {
             checkEmailExist(email, resolve, reject)
         })
@@ -47,6 +53,10 @@ const checkEmailExist = (email, resolve, reject) => {
 
 const authentication = async (email, password) => {
     try {
+        let validationError = validation({email, password});
+        if(validationError.errors.length > 0){
+            return validationError
+        }
         const isUserExist = await new Promise((resolve, reject) => {
             checkEmailExist(email, resolve, reject)
         })
