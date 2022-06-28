@@ -12,5 +12,5 @@ app.use('/auth', routerAuth)
 app.use('/authors', routerAuthor)
 app.use('/books', routerBook)
 app.listen(3000, () => {
-  console.log('Server dah jalan')
+  console.log("Server dah jalan di http://localhost:3000")
 })

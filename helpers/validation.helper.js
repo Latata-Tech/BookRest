@@ -1,3 +1,5 @@
+const { ResponseHelper } = require("./response.helper");
+
 //191111291 - Farhan Ismul Afriza
 const validation = (...params) => {
   let errors = [];
@@ -10,12 +12,7 @@ const validation = (...params) => {
       errors.push(error)
     }
   }
-  return {
-    statusCode: 400,
-    status:'fail',
-    message: 'The given data was invalid',
-    errors
-  }
+  return ResponseHelper(400, 'fail', 'The given data was invalid', errors)
 }
 
 module.exports = {validation}
