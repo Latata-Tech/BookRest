@@ -1,9 +1,10 @@
 const express = require('express')
 const sqlite3 = require('sqlite3')
 const router = express.Router()
+const {authenticationToken} = require('../helpers/jwt.helper')
 const db = new sqlite3.Database('data.db')
 
-router.get('/', (req, res) => {
+router.get('/', authenticationToken,(req, res) => {
     db.all('SELECT id, nama FROM author', (err, data) => {
         if (err) {
             res.send(err.message)
@@ -13,7 +14,7 @@ router.get('/', (req, res) => {
     })
 })
 
-router.post('/', (req, res) => {
+router.post('/', authenticationToken,(req, res) => {
     db.run('INSERT INTO author (id, nama, jk, tahun_lahir) VALUES (?, ?, ?, ?)', [req.body.id, req.body.nama, req.body.jk, req.body.tahun_lahir], function (err) {
         if (err) {
             res.send(err.message)
@@ -25,7 +26,7 @@ router.post('/', (req, res) => {
     })
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', authenticationToken,(req, res) => {
     db.get('SELECT * FROM author WHERE id=?', [req.params.id], (err, data) => {
         if (err) {
             res.send(err.message)
@@ -35,7 +36,7 @@ router.get('/:id', (req, res) => {
     })
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', authenticationToken,(req, res) => {
     db.run('DELETE FROM author WHERE id=?', [req.params.id], (err) => {
         if (err) {
             res.send(err.message)
@@ -47,7 +48,7 @@ router.delete('/:id', (req, res) => {
     })
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', authenticationToken,(req, res) => {
     db.run('UPDATE author SET id=?, nama=?, jk=?, tahun_lahir=? WHERE id=?', [req.params.id, req.body.nama, req.body.jk, req.body.tahun_lahir, req.params.id], function (err) {
         if (err) {
             res.send(err.message)
