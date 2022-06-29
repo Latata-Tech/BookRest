@@ -45,7 +45,9 @@ router.delete('/:id', authenticationToken,(req, res) => {
             return;
         }
         res.status(204)
-        req.app.io.emit('remove book') /// realtime data
+        req.app.io.emit('remove book', {
+            isbn: req.params.id
+        }) /// realtime data
         res.end()
     })
 })
@@ -60,7 +62,8 @@ router.put('/:id', authenticationToken,(req, res) => {
         req.app.io.emit('update book', {
             judul: req.body.judul,
             author: req.body.author,
-            updated_at: time
+            updated_at: time,
+            isbn: req.params.id
         }) /// realtime data
         res.send('success');
         res.end()
