@@ -5,8 +5,6 @@ const routerAuthor = require('./routes/author.route')
 const routerBook = require('./routes/book.route')
 const routerAuth = require('./routes/auth.route')
 
-
-
 app.use(express.json())
 // enable cors
 app.use(cors())
@@ -27,7 +25,8 @@ const io = require('socket.io')(server, {
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  socket.on('message',(message) => {
-    console.log(message);
-  });
+  app.io = io;
+  app.socket = socket;
 })
+
+
