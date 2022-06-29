@@ -9,7 +9,7 @@ const db = new sqlite3.Database('data.db')
 
 const register = async (name, email, password) => {
     try {
-        const salt = bcrypt.genSaltSync(10)
+        const salt = bcrypt.genSaltSync(10) 
         let validationError = validation({name, email, password});
         if(validationError.data.length > 0){
             return validationError
