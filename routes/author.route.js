@@ -24,7 +24,7 @@ router.post("/", authenticationToken, (req, res) => {
     res.status(400).send(validationError);
   } else {
     db.run(
-      "INSERT INTO author (nama, jk, tahun_lahir,created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+      "INSERT INTO author (nama, jk, tahun_lahir,created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
       [nama, jeniskelamin, tahunlahir, currentDateTime(), currentDateTime()],
       function (err) {
         if (err) {
