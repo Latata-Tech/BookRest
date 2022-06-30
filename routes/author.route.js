@@ -18,14 +18,14 @@ router.get("/", authenticationToken, (req, res) => {
 });
 
 router.post("/", authenticationToken, (req, res) => {
-  const { id, nama, jk, tahun_lahir } = req.body;
-  let validationError = validation({ id, jk, nama, tahun_lahir });
+  const { nama, jk, tahun_lahir } = req.body;
+  let validationError = validation({ jk, nama, tahun_lahir });
   if (validationError.data.length > 0) {
     res.status(400).send(validationError);
   } else {
     db.run(
-      "INSERT INTO author (id, nama, jk, tahun_lahir,created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-      [id, nama, jk, tahun_lahir, currentDateTime(), currentDateTime()],
+      "INSERT INTO author (nama, jk, tahun_lahir,created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+      [nama, jk, tahun_lahir, currentDateTime(), currentDateTime()],
       function (err) {
         if (err) {
           res.send(err.message);
