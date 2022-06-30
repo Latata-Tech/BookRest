@@ -6,8 +6,8 @@ const currentDateTime = require("../helpers/date.helper");
 const { authenticationToken } = require("../helpers/jwt.helper");
 const { validation } = require("../helpers/validation.helper");
 const db = new sqlite3.Database("data.db");
-const io = require('../socket')
-const {getAuthors, getAuthor} = require('../handlers/author.handler')
+const io = require("../socket");
+const { getAuthors, getAuthor } = require("../handlers/author.handler");
 
 router.get("/", authenticationToken, (req, res) => {
   db.all("SELECT id, nama FROM author", (err, data) => {
@@ -27,14 +27,20 @@ router.post("/", authenticationToken, (req, res) => {
   } else {
     db.run(
       "INSERT INTO author (nama, jk, tahun_lahir,created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-      [nama, jeniskelamin, tahunlahir, currentDateTime(), currentDateTime()],
+      [
+        nama,
+        jeniskelamin,
+        tahunlahir,
+        new Date().getTime(),
+        new Date().getTime(),
+      ],
       async function (err) {
         if (err) {
           res.send(err.message);
           return;
         }
         console.log("Inserted " + this.changes + " record");
-        io.emit('author', await getAuthors())
+        io.emit("author", await getAuthors());
         res.status(201);
         res.end();
       }
@@ -59,7 +65,7 @@ router.delete("/:id", authenticationToken, (req, res) => {
       return;
     }
     console.log("Updated " + this.changes + " record");
-    io.emit('author', await getAuthors())
+    io.emit("author", await getAuthors());
     res.status(204);
     res.end();
   });
@@ -73,14 +79,14 @@ router.put("/:id", authenticationToken, (req, res) => {
   } else {
     db.run(
       "UPDATE author SET nama=?, jk=?, tahun_lahir=?, updated_at=? WHERE id=?",
-      [nama, jk, tahun_lahir, currentDateTime(), req.params.id],
+      [nama, jk, tahun_lahir, new Date().getTime(), req.params.id],
       async function (err) {
         if (err) {
           res.status(400).send(err.message);
           return;
         }
-        io.emit('author', await getAuthors())
-        io.emit('detail_author', await getAuthor(req.params.id))
+        io.emit("author", await getAuthors());
+        io.emit("detail_author", await getAuthor(req.params.id));
         console.log("Updated " + this.changes + " record");
         res.status(200);
         res.end();
