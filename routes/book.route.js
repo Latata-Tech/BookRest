@@ -1,10 +1,11 @@
-/// 191111827 - fiqri ardiansyah -add socket
+/// 191111291 - Farhan Ismul Afriza
 const express = require('express')
 const sqlite3 = require('sqlite3')
 const { authenticationToken } = require('../helpers/jwt.helper')
 const router = express.Router()
 const db = new sqlite3.Database('data.db')
 const io = require('../socket')
+const currentDateTime = require("../helpers/date.helper");
 
 
 //books
@@ -19,7 +20,7 @@ router.get('/', authenticationToken,(req, res) => {
 })
 
 router.post('/', authenticationToken,(req, res) => {
-    db.run('INSERT INTO book (isbn, judul, author, created_at) VALUES (?, ?, ?, ?)', [req.body.isbn, req.body.judul, req.body.author, new Date().getTime()], function (err) {
+    db.run('INSERT INTO book (isbn, judul, author, created_at, updated_at) VALUES (?, ?, ?, ?, ?)', [req.body.isbn, req.body.judul, req.body.author, currentDateTime(), currentDateTime()], function (err) {
         if (err) {
             res.send(err.message)
             return;
@@ -56,7 +57,7 @@ router.delete('/:id', authenticationToken,(req, res) => {
 
 router.put('/:id', authenticationToken,(req, res) => {
     const time = new Date().getTime();
-    db.run('UPDATE book SET judul=?, author=?, updated_at=? WHERE isbn=?', [req.body.judul, req.body.author,time, req.params.id], function (err) {
+    db.run('UPDATE book SET judul=?, author=?, updated_at=? WHERE isbn=?', [req.body.judul, req.body.author, currentDateTime(), req.params.id], function (err) {
         if (err) {
             res.send(err.message)
             return;
@@ -64,7 +65,7 @@ router.put('/:id', authenticationToken,(req, res) => {
         io.emit('update book', {
             judul: req.body.judul,
             author: req.body.author,
-            updated_at: time,
+            updated_at: currentDateTime(),
             isbn: req.params.id
         }) /// realtime data
         res.send('success');

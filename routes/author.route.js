@@ -1,4 +1,4 @@
-//191110597 - Rizky Kurniawan Pakpahan
+//191111291 - Farhan Ismul Afriza
 const express = require("express");
 const router = express.Router();
 const sqlite3 = require("sqlite3");
@@ -20,14 +20,14 @@ router.get("/", authenticationToken, (req, res) => {
 });
 
 router.post("/", authenticationToken, (req, res) => {
-  const { nama, jeniskelamin, tahunlahir } = req.body;
-  let validationError = validation({ jeniskelamin, nama, tahunlahir });
+  const { id, nama, jeniskelamin, tahunlahir } = req.body;
+  let validationError = validation({ id ,jeniskelamin, nama, tahunlahir });
   if (validationError.data.length > 0) {
     res.status(400).send(validationError);
   } else {
     db.run(
-      "INSERT INTO author (nama, jk, tahun_lahir,created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-      [nama, jeniskelamin, tahunlahir, currentDateTime(), currentDateTime()],
+      "INSERT INTO author (id, nama, jk, tahun_lahir,created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+      [id, nama, jeniskelamin, tahunlahir, currentDateTime(), currentDateTime()],
       async function (err) {
         if (err) {
           res.send(err.message);

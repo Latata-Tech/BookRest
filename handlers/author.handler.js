@@ -1,7 +1,7 @@
+//191111291 - Farhan Ismul Afriza
 const sqlite3 = require("sqlite3");
 const db = new sqlite3.Database("data.db");
 
-//191111291 - Farhan Ismul Afriza
 const getAuthors = async () => {
     try {
         return await new Promise((resolve, reject) => {
@@ -17,7 +17,6 @@ const getAuthors = async () => {
     }
 }
 
-// 191110 - Rizky Pakpakhan
 const getAuthor = async (id) => {
     try {
         return await new Promise((resolve, reject) => {
