@@ -4,6 +4,8 @@ const sqlite3 = require('sqlite3')
 const { authenticationToken } = require('../helpers/jwt.helper')
 const router = express.Router()
 const db = new sqlite3.Database('data.db')
+const io = require('../socket')
+
 
 //books
 router.get('/', authenticationToken,(req, res) => {
@@ -23,7 +25,7 @@ router.post('/', authenticationToken,(req, res) => {
             return;
         }
         res.status(201)
-        req.app.io.emit('new book') /// realtime data
+        io.emit('new book') /// realtime data
         res.end()
     })
 })
@@ -45,7 +47,7 @@ router.delete('/:id', authenticationToken,(req, res) => {
             return;
         }
         res.status(204)
-        req.app.io.emit('remove book', {
+        io.emit('remove book', {
             isbn: req.params.id
         }) /// realtime data
         res.end()
@@ -59,7 +61,7 @@ router.put('/:id', authenticationToken,(req, res) => {
             res.send(err.message)
             return;
         }
-        req.app.io.emit('update book', {
+        io.emit('update book', {
             judul: req.body.judul,
             author: req.body.author,
             updated_at: time,
