@@ -2,7 +2,7 @@
 const currentDateTime = () => {
   const now = new Date();
   let date = `${now.getFullYear()}-${addZeroOnFront(
-    now.getMonth()
+    now.getMonth() + 1
   )}-${addZeroOnFront(now.getDate())}`;
   let time = `${addZeroOnFront(now.getHours())}:${addZeroOnFront(
     now.getMinutes()

@@ -5,6 +5,6 @@ const io = require('socket.io')(server, {
     }
 })
 io.on('connection', (socket) => {
-    app.socket = socket
+    console.log('jalan')
 })
 module.exports = io
