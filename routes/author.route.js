@@ -1,4 +1,4 @@
-//191110597 - Rizky Kurniawan Pakpahan
+//Rizky Kurniawan pakpahan
 const express = require("express");
 const router = express.Router();
 const sqlite3 = require("sqlite3");
@@ -19,32 +19,40 @@ router.get("/", authenticationToken, (req, res) => {
   });
 });
 
-router.post("/", authenticationToken, (req, res) => {
-  const { nama, jeniskelamin, tahunlahir } = req.body;
-  let validationError = validation({ jeniskelamin, nama, tahunlahir });
+router.post("/", authenticationToken, async (req, res) => {
+  const { id, nama, jeniskelamin, tahunlahir } = req.body;
+  let validationError = validation({ id, jeniskelamin, nama, tahunlahir });
   if (validationError.data.length > 0) {
     res.status(400).send(validationError);
   } else {
-    db.run(
-      "INSERT INTO author (nama, jk, tahun_lahir,created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-      [
-        nama,
-        jeniskelamin,
-        tahunlahir,
-        new Date().getTime(),
-        new Date().getTime(),
-      ],
-      async function (err) {
-        if (err) {
-          res.send(err.message);
-          return;
+    if (await getAuthor(id)) {
+      res.status(409);
+      res.send({
+        status: "fail",
+        message: "Author ID Already Exist!",
+      });
+    } else {
+      db.run(
+        "INSERT INTO author (id, nama, jk, tahun_lahir, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+        [
+          id,
+          nama,
+          jeniskelamin,
+          tahunlahir,
+          new Date().getTime(),
+          new Date().getTime(),
+        ],
+        async function (err) {
+          if (err) {
+            res.send(err.message);
+            return;
+          }
+          io.emit("author", await getAuthors());
+          res.status(201);
+          res.end();
         }
-        console.log("Inserted " + this.changes + " record");
-        io.emit("author", await getAuthors());
-        res.status(201);
-        res.end();
-      }
-    );
+      );
+    }
   }
 });
 
@@ -64,14 +72,13 @@ router.delete("/:id", authenticationToken, (req, res) => {
       res.send(err.message);
       return;
     }
-    console.log("Updated " + this.changes + " record");
     io.emit("author", await getAuthors());
     res.status(204);
     res.end();
   });
 });
 
-router.put("/:id", authenticationToken, (req, res) => {
+router.put("/:id", authenticationToken, async (req, res) => {
   const { nama, jk, tahun_lahir } = req.body;
   let validationError = validation({ jk, nama, tahun_lahir });
   if (validationError.data.length > 0) {
@@ -87,7 +94,6 @@ router.put("/:id", authenticationToken, (req, res) => {
         }
         io.emit("author", await getAuthors());
         io.emit("detail_author", await getAuthor(req.params.id));
-        console.log("Updated " + this.changes + " record");
         res.status(200);
         res.end();
       }
