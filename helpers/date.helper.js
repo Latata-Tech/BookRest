@@ -1,4 +1,4 @@
-// 191111291 - Farhan Ismul Afriza
+//191110597 - Rizky Kurniawan Pakpahan
 const currentDateTime = () => {
   const now = new Date();
   let date = `${now.getFullYear()}-${addZeroOnFront(
